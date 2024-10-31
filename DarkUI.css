@@ -1,0 +1,104 @@
+/* General StyleSheet for All Labels in the UI */
+QLabel {
+    color: #A8A8A8; /* Light gray text color */
+    font-size: 14px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+}
+
+/* General StyleSheet for All Line Edits in the UI */
+QLineEdit {
+    border: 2px solid #4F4F4F; /* Dark gray border */
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 14px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #333333; /* Dark background */
+    color: #A8A8A8; /* Light gray text color */
+    font-weight: bold;
+}
+
+QLineEdit:focus {
+    border: 2px solid #007ACC; /* Blue border when focused */
+    background-color: #444444; /* Slightly lighter background when focused */
+}
+
+/* General StyleSheet for All Push Buttons in the UI */
+QPushButton {
+    background-color: #444444; /* Slightly lighter background */
+    border: 1px solid #4F4F4F; /* Dark gray border */
+    border-radius: 8px;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 14px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    color: #A8A8A8; /* Light gray text color */
+}
+
+QPushButton:hover {
+    background-color: #555555; /* Slightly lighter background on hover */
+    text-decoration: underline;
+    font-weight: bolder;
+}
+
+QPushButton:pressed {
+    background-color: #444444; /* Slightly lighter background when pressed */
+    border: 1px solid #8BAFD8;
+}
+
+/* Apply stylesheets for the entire toolbar, including QAction, QFontComboBox, and QComboBox */
+QToolBar {
+    background-color: #333333; /* Dark background of the toolbar */
+    border: none;
+}
+
+QToolButton {
+    background-color: #444444; /* Slightly lighter background */
+    border: 1px solid #4F4F4F; /* Dark gray border */
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    color: #A8A8A8; /* Light gray text color */
+}
+
+QToolButton:checked {
+    background-color: #555555; /* Slightly lighter background when checked */
+}
+
+QToolButton:hover {
+    background-color: #555555; /* Slightly lighter background on hover */
+    text-decoration: underline;
+    font-style: italic;
+}
+
+QToolButton:pressed {
+    background-color: #444444; /* Slightly lighter background when pressed */
+    border: 1px solid #8BAFD8;
+}
+
+QFontComboBox, QComboBox {
+    background-color: #444444; /* Slightly lighter background */
+    border: 1px solid #4F4F4F; /* Dark gray border */
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    color: #A8A8A8; /* Light gray text color */
+}
+
+QTextEdit {
+    background-color: #333333; /* Dark background */
+    color: #A8A8A8; /* Light gray text color */
+    border: 2.5px solid #4F4F4F; /* Dark gray border */
+    border-radius: 20px;
+    padding: 10px;
+}
+
+QTextEdit:focus {
+    border: 2.5px solid #007ACC; /* Blue border when focused */
+    background-color: #333333; /* Dark background when focused */
+}

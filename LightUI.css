@@ -1,0 +1,144 @@
+/* General StyleSheet for All Labels in the UI */
+QLabel {
+color: #5d5e5f;
+font-size: 15px;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+font-weight: bold;
+}
+
+/* General StyleSheet for All Line Edits in the UI */
+QLineEdit {
+border: 3px solid #B0CBE4;  
+border-radius: 20px;
+padding: 10px;
+font-size: 14px;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+/* Default background color */
+background-color: #F5F5F5;
+
+/* Text color */
+
+color: #5d5e5f;
+font-weight: bold;
+}
+QLineEdit:focus {
+/* Blue border when the line edit is focused */
+border: 3px solid #007ACC;  
+/* White background color when focused */
+background-color: #FFFFFF;
+}
+
+/* General StyleSheet for All Push Buttons in the UI */
+QPushButton {
+background-color: whitesmoke;
+border: 2.5px solid #0b7ee9;
+border-radius: 20px;
+padding: 10px 20px;
+text-align: center;
+font-size: 14px;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+font-weight: bold;
+}
+QPushButton:hover {
+background-color: #D1E7FE;
+font-style: bold;
+font-weight: bolder;
+}
+QPushButton:pressed {
+background-color: #B9DFFA;
+border: 2.5px solid #0b7ee9;
+}
+
+/* Apply stylesheets for the entire toolbar, including QAction, QFontComboBox, and QComboBox */
+QToolBar {
+/* No border */
+border: none;
+}
+
+QToolButton {
+background-color: whitesmoke;
+border: 2.5px solid #0b7ee9;
+border-radius: 15px;
+padding: 5px 10px;
+font-size: 14px;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+font-weight: bold;
+}
+
+QToolButton:checked {
+background-color: #D1E7FE;
+}
+
+QToolButton:hover {
+background-color: #D1E7FE;
+font-style: italic;
+}
+
+QToolButton:pressed {
+background-color: #B9DFFA;
+border: 2.5px solid #0b7ee9;
+}
+
+QComboBox {
+    background-color: whitesmoke;
+    border: 2.5px solid #0b7ee9;
+    border-radius: 15px;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 2px solid #0b7ee9;
+}
+
+QComboBox::down-arrow {
+    image: url(UI-IMAGES/down_arrow.png); /* Replace with the path to your image */
+}
+
+QComboBox QAbstractItemView {
+    border: 3px solid darkgray; /* Border for the dropdown menu */
+    border-radius: 7px;
+    background-color: rgb(218, 216, 216);
+    selection-background-color: #0b7ee9; /* Background color of the selected item */
+    /* background-color: white; Background color of the dropdown menu */
+    color: black; /* Text color of items in the dropdown menu */
+    font-size: 13px; /* Font size for items in the dropdown menu */
+    padding: 1px 0px;
+}
+
+QComboBox::item {
+}
+
+QComboBox::item:selected {
+    background-color: #007ACC;
+    color: rgb(29, 28, 28); /* Text color of the selected item */
+}
+
+QComboBox::item:hover {
+    background-color: #C8E6C9; /* Highlight the item on hover */
+}
+
+QComboBox::down-arrow:pressed {
+    /* Styles for pressed state */
+    image: url(UI-IMAGES/down_arrow_pressed.png); /* Replace with the path to your pressed image */
+}
+
+
+QTextEdit {
+    background-color: #FFFFFF;
+    color: #333333;
+    border: 2.5px solid #B0CBE4;
+    border-radius: 40px;
+    padding: 15px;
+}
+
+QTextEdit:focus {
+    border: 2.5px solid #024CAA;
+    background-color: #FFFFFF;
+}

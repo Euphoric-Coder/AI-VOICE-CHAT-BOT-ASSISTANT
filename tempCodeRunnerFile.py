@@ -1,0 +1,1 @@
+self.setWindowTitle("New Message")
