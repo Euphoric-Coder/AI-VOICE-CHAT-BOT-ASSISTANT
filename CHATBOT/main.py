@@ -1,17 +1,10 @@
 import os
 import csv
 from PyQt6.QtWidgets import (
-    QApplication,
-    QWidget,
-    QVBoxLayout,
-    QLineEdit,
-    QLabel,
-    QScrollArea,
-    QFrame,
-    QHBoxLayout,
+    QApplication, QWidget, QVBoxLayout, QLineEdit, QLabel, QScrollArea, QFrame, QHBoxLayout
 )
-from PyQt6.QtCore import Qt, QPropertyAnimation, QPoint
-from PyQt6.QtGui import QTextCursor, QPalette, QColor
+from PyQt6.QtCore import Qt, QPropertyAnimation, QTimer
+from PyQt6.QtGui import QFont
 from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 from dotenv import load_dotenv
@@ -19,13 +12,8 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-
 class InsightBot:
-    def __init__(
-        self,
-        history_file="conversation_history.txt",
-        csv_file="conversation_summary.csv",
-    ):
+    def __init__(self, history_file="conversation_history.txt", csv_file="conversation_summary.csv"):
         self.llm = ChatGroq(
             temperature=0,
             groq_api_key=os.getenv("GROQ_API_KEY"),
@@ -47,18 +35,29 @@ class InsightBot:
     def _log_to_csv(self, question, prompt_given, summary):
         file_exists = os.path.exists(self.csv_file)
         with open(self.csv_file, "a", newline="") as file:
-            writer = csv.DictWriter(
-                file, fieldnames=["question", "prompt_given", "summary"]
-            )
+            writer = csv.DictWriter(file, fieldnames=["question", "prompt_given", "summary"])
             if not file_exists:
                 writer.writeheader()
-            writer.writerow(
-                {"question": question, "prompt_given": prompt_given, "summary": summary}
-            )
+            writer.writerow({"question": question, "prompt_given": prompt_given, "summary": summary})
 
     def _append_to_history_file(self, user_input, ai_response):
+        """Append the entire user-AI conversation pair to the text file."""
         with open(self.history_file, "a") as file:
             file.write(f"User: {user_input}\nInsightAI (HTML): {ai_response}\n\n")
+
+    def load_full_history(self):
+        """Load and return the full conversation history as user-AI pairs from the text file."""
+        history = []
+        if os.path.exists(self.history_file):
+            with open(self.history_file, "r") as file:
+                conversation = file.read().strip().split("\n\n")
+                for entry in conversation:
+                    parts = entry.split("\nInsightAI (HTML): ")
+                    if len(parts) == 2:
+                        user_message = parts[0].replace("User: ", "").strip()
+                        ai_message = parts[1].strip()
+                        history.append((user_message, ai_message))
+        return history
 
     def _generate_summary(self, text):
         prompt = PromptTemplate.from_template(
@@ -114,10 +113,10 @@ class ChatWindow(QWidget):
         super().__init__()
         self.bot = InsightBot()
         self.setWindowTitle("InsightBot Chat")
-        self.setGeometry(100, 100, 500, 600)
-        self.setStyleSheet("background-color: #2c3e50; color: #ecf0f1;")
+        self.setGeometry(100, 100, 550, 700)
+        self.setStyleSheet("background-color: #1c2833; color: #f7f9f9;")
 
-        # Layout
+        # Main layout
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
 
@@ -131,28 +130,39 @@ class ChatWindow(QWidget):
 
         # Input area with a floating style
         self.input_field = QLineEdit()
-        self.input_field.setPlaceholderText("Type your message here...")
+        self.input_field.setPlaceholderText("Ask something...")
         self.input_field.returnPressed.connect(self.handle_user_input)
         self.layout.addWidget(self.input_field)
 
-        # Set styles for a professional look
-        self.scroll_area.setStyleSheet("border: none; background-color: #34495e;")
-        self.scroll_layout.setSpacing(10)
+        # Set styles for a modern UI
+        self.scroll_area.setStyleSheet("border: none; background-color: #273746;")
+        self.scroll_layout.setSpacing(12)
         self.input_field.setStyleSheet(
             """
             QLineEdit {
-                background-color: #1abc9c;
-                color: #2c3e50;
+                background-color: #34495e;
+                color: #ecf0f1;
                 padding: 10px;
-                border-radius: 15px;
-                border: none;
-                margin: 10px;
+                border-radius: 20px;
+                margin: 15px;
+                border: 1px solid #1abc9c;
             }
             QLineEdit:hover {
-                background-color: #16a085;
+                background-color: #1abc9c;
+                color: #34495e;
             }
         """
         )
+
+        # Load chat history on startup
+        self.load_chat_history()
+
+    def load_chat_history(self):
+        """Load and display chat history from the conversation_history.txt file."""
+        history = self.bot.load_full_history()
+        for user_message, ai_response in history:
+            self.add_message(user_message, sender="User")
+            self.add_message(ai_response, sender="InsightAI")
 
     def add_message(self, message, sender="User"):
         message_label = QLabel()
@@ -163,14 +173,14 @@ class ChatWindow(QWidget):
         # Style messages differently for user and bot
         if sender == "User":
             message_label.setStyleSheet(
-                "background-color: #3498db; color: #ecf0f1; padding: 10px; border-radius: 15px;"
+                "background-color: #3498db; color: #f7f9f9; padding: 12px; border-radius: 15px;"
             )
             align_layout = QHBoxLayout()
             align_layout.addStretch()
             align_layout.addWidget(message_label)
         else:
             message_label.setStyleSheet(
-                "background-color: #e67e22; color: #ecf0f1; padding: 10px; border-radius: 15px;"
+                "background-color: #e67e22; color: #f7f9f9; padding: 12px; border-radius: 15px;"
             )
             align_layout = QHBoxLayout()
             align_layout.addWidget(message_label)
@@ -181,8 +191,8 @@ class ChatWindow(QWidget):
         container.setLayout(align_layout)
         self.scroll_layout.addWidget(container)
 
-        # Smooth scroll to the latest message
-        QTimer.singleShot(50, lambda: self.scroll_to_bottom())
+        # Smoothly scroll to the latest message
+        QTimer.singleShot(100, lambda: self.scroll_to_bottom())
 
     def handle_user_input(self):
         user_input = self.input_field.text()
@@ -191,7 +201,7 @@ class ChatWindow(QWidget):
         self.add_message(user_input, sender="User")
         self.input_field.clear()
 
-        # Get AI response in HTML format
+        # Get AI response in HTML format and display
         ai_response = self.bot.Chat(user_input)
         self.add_message(ai_response, sender="InsightAI")
 
@@ -199,7 +209,7 @@ class ChatWindow(QWidget):
         """Smoothly scroll to the bottom of the chat display area."""
         scroll_bar = self.scroll_area.verticalScrollBar()
         animation = QPropertyAnimation(scroll_bar, b"value")
-        animation.setDuration(500)
+        animation.setDuration(700)
         animation.setStartValue(scroll_bar.value())
         animation.setEndValue(scroll_bar.maximum())
         animation.start()
@@ -207,7 +217,6 @@ class ChatWindow(QWidget):
 
 if __name__ == "__main__":
     import sys
-    from PyQt6.QtCore import QTimer
 
     app = QApplication(sys.argv)
     window = ChatWindow()
