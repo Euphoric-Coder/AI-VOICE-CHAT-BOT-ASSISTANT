@@ -161,8 +161,24 @@ class ChatWindow(QWidget):
         """
         )
 
+        # Timer to check and update label widths
+        self.resize_check_timer = QTimer(self)
+        self.resize_check_timer.timeout.connect(self.update_label_widths)
+        self.resize_check_timer.start(300)  # Adjusts every 300 ms
+
+
+
         # Load chat history on startup
         self.load_chat_history()
+
+    def update_label_widths(self):
+        """Update the maximum width of all QLabel messages based on the current window size."""
+        max_label_width = int(self.width() * 0.8)  # Adjust to 80% of window width
+        for i in range(self.scroll_layout.count()):
+            item = self.scroll_layout.itemAt(i).widget()
+            if isinstance(item, QWidget):
+                label = item.layout().itemAt(1 if i % 2 == 0 else 0).widget()  # Get QLabel
+                label.setMaximumWidth(max_label_width)
 
     def load_chat_history(self):
         """Load and display chat history from the conversation_history.txt file."""
@@ -173,10 +189,13 @@ class ChatWindow(QWidget):
 
     def add_message(self, message, sender="User"):
         message_label = QLabel()
-        message_label.setMaximumWidth(self.width() - 30)
         message_label.setWordWrap(True)
         message_label.setTextFormat(Qt.TextFormat.RichText)  # Enable HTML formatting
         message_label.setText(message)
+
+        # Set initial maximum width based on window size
+        max_label_width = int(self.width() * 0.8)
+        message_label.setMaximumWidth(max_label_width)
 
         # Style messages differently for user and bot
         if sender == "User":
