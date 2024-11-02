@@ -2,7 +2,7 @@
 import time
 import pytz
 import datetime
-from announcer import speak
+from UTILITIES.announcer import speak
 from recorder import description_recorder, date_reciever
 from date_retriever import date_interpreter
 from time_detector import starting_time_recorder, ending_time_recorder

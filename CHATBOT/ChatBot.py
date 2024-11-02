@@ -6,7 +6,7 @@ from PyQt6.QtGui import *
 from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 from dotenv import load_dotenv
-
+from UTILITIES import announcer
 # Load environment variables
 load_dotenv()
 
