@@ -1,0 +1,68 @@
+/* style.css */
+
+/* Main Window */
+#mainWindow {
+    background: qlineargradient(
+        spread:pad, x1:0, y1:0, x2:1, y2:1,
+        stop:0 #1b2a41, stop:1 #283d5a
+    );
+    color: #ecf0f1;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 15px;
+}
+
+/* Scroll Area */
+#scrollArea {
+    border: none;
+    background-color: transparent;
+}
+
+#scrollContent {
+    background: transparent;
+}
+
+/* Input Field */
+#inputField {
+    background-color: #2f3b4a;
+    color: #ffffff;
+    padding: 15px;
+    border-radius: 25px;
+    margin: 15px;
+    border: 2px solid #1abc9c;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+#inputField:hover {
+    background-color: #1abc9c;
+    color: #ffffff;
+}
+
+#inputField:focus {
+    border: 2px solid #f1c40f;
+}
+
+/* User Message */
+#messageUser {
+    background-color: #3498db;
+    color: #ffffff;
+    padding: 12px;
+    border-radius: 20px;
+    margin: 8px 12px 8px 80px;
+    font-size: 14px;
+}
+
+/* Bot Message */
+#messageBot {
+    background-color: #e67e22;
+    color: #ffffff;
+    padding: 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    margin: 8px 80px 8px 12px;
+}
+
+/* Message Container */
+#messageContainer {
+    padding: 5px;
+}

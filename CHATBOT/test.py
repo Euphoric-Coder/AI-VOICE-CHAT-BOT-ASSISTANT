@@ -1,5 +1,6 @@
 import os
 import csv
+import subprocess
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
@@ -9,6 +10,15 @@ from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
+
+
+def macos_theme():
+    """Checks DARK/LIGHT mode of macOS."""
+    cmd = "defaults read -g AppleInterfaceStyle"
+    p = subprocess.Popen(
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
+    )
+    return bool(p.communicate()[0])
 
 
 class InsightBot:
@@ -120,10 +130,8 @@ class ChatWindow(QWidget):
             | Qt.WindowType.WindowCloseButtonHint
         )
 
-        # Set object name for main window
+        # Set object names for components
         self.setObjectName("mainWindow")
-
-        # Main layout
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
 
@@ -139,22 +147,121 @@ class ChatWindow(QWidget):
         self.scroll_area.setWidget(self.scroll_content)
         self.layout.addWidget(self.scroll_area)
 
-        # Input area
+        # Input and theme toggle layout
+        input_layout = QHBoxLayout()
+        input_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+
+        # Theme toggle button as an icon
+        self.theme_toggle_button = QPushButton()
+        self.theme_toggle_button.setObjectName("themeToggleButton")
+        self.theme_toggle_button.setFixedSize(30, 30)
+        self.theme_toggle_button.setIconSize(
+            QSize(20, 20)
+        )  # Fixed icon size to prevent shifting
+        self.theme_toggle_button.clicked.connect(self.toggle_theme)
+
+        # Initial theme and button styling
+        self.current_theme = None
+        self.load_initial_theme()
+
+        input_layout.addWidget(self.theme_toggle_button)
+
+        # Input field
         self.input_field = QLineEdit()
         self.input_field.setPlaceholderText("Ask something...")
         self.input_field.setObjectName("inputField")
-        self.layout.addWidget(self.input_field)
+        input_layout.addWidget(self.input_field)
         self.input_field.returnPressed.connect(self.handle_user_input)
 
-        # Load the external CSS file
-        self.load_stylesheet()
+        # Add input layout to the main layout
+        self.layout.addLayout(input_layout)
 
         # Load chat history on startup
         self.load_chat_history()
 
-    def load_stylesheet(self):
-        with open("style.css", "r") as file:
-            self.setStyleSheet(file.read())
+    def load_stylesheet(self, path):
+        """Load a stylesheet from a file."""
+        with open(path, "r") as file:
+            style_sheet = file.read()
+            self.setStyleSheet(style_sheet)
+
+    def load_initial_theme(self):
+        """Load light or dark theme based on initial macOS theme and set the icon and background color."""
+        if macos_theme():
+            self.load_stylesheet("./STYLESHEETS/ChatDarkUI.css")
+            self.current_theme = "dark"
+            self.theme_toggle_button.setIcon(
+                QIcon("sun_icon.png")
+            )  # Set to sun icon for dark mode
+            self.theme_toggle_button.setStyleSheet(
+                """
+                QPushButton {
+                    border: none;
+                    background-color: #f0c674;  /* Light yellow background for dark mode */
+                    border-radius: 15px;
+                }
+                QPushButton:hover {
+                    background-color: #f5d799;  /* Lighter yellow on hover */
+                }
+            """
+            )
+        else:
+            self.load_stylesheet("./STYLESHEETS/ChatLightUI.css")
+            self.current_theme = "light"
+            self.theme_toggle_button.setIcon(
+                QIcon("moon_icon.png")
+            )  # Set to moon icon for light mode
+            self.theme_toggle_button.setStyleSheet(
+                """
+                QPushButton {
+                    border: none;
+                    background-color: #333333;  /* Dark gray background for light mode */
+                    border-radius: 15px;
+                }
+                QPushButton:hover {
+                    background-color: #555555;  /* Lighter gray on hover */
+                }
+            """
+            )
+
+    def toggle_theme(self):
+        """Manually toggle between light and dark themes, updating the icon and button background color."""
+        if self.current_theme == "dark":
+            self.load_stylesheet("./STYLESHEETS/ChatLightUI.css")
+            self.current_theme = "light"
+            self.theme_toggle_button.setIcon(
+                QIcon("moon_icon.png")
+            )  # Switch to moon icon for light mode
+            self.theme_toggle_button.setStyleSheet(
+                """
+                QPushButton {
+                    border: none;
+                    background-color: #333333;  /* Dark gray background */
+                    border-radius: 15px;
+                }
+                QPushButton:hover {
+                    background-color: #555555;  /* Lighter gray on hover */
+                }
+            """
+            )
+        else:
+            self.load_stylesheet("./STYLESHEETS/ChatDarkUI.css")
+            self.current_theme = "dark"
+            self.theme_toggle_button.setIcon(
+                QIcon("sun_icon.png")
+            )  # Switch to sun icon for dark mode
+            self.theme_toggle_button.setStyleSheet(
+                """
+                QPushButton {
+                    border: none;
+                    background-color: #f0c674;  /* Light yellow background */
+                    border-radius: 15px;
+                }
+                QPushButton:hover {
+                    background-color: #f5d799;  /* Lighter yellow on hover */
+                }
+            """
+            )
 
     def load_chat_history(self):
         history = self.bot.load_full_history()
